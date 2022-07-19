@@ -1,0 +1,96 @@
+server:
+  port: 9300
+spring:
+  application:
+    name: service-gateway
+# redis配置
+  redis:
+    host:
+    port: 
+    password:
+    database: 
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      enabled: true
+      routes:
+        - id: change-detection
+          predicates: Path=/api/changeDetection/**
+          uri: lb://change-detection
+          filters:
+            - name: Hystrix
+              args:
+                name: defaultfallback
+                fallback: forward:/defaultfallback
+            - name: RequestRateLimiter #请求数限流，名字不能乱打
+              args:
+                redis-rate-limiter.replenishRate: 50  #令牌填充速率
+                redis-rate-limiter.brustCapacity: 100 #令牌捅容量
+                key-resolver: "#{@IPResolver}"   #SpEL表达式从Spring容器中获取Bean对象
+        - id: target-detection
+          predicates: Path=/api/targetDetection/**
+          uri: lb://target-detection
+          filters:
+            - name: Hystrix
+              args:
+                name: defaultfallback
+                fallback: forward:/defaultfallback
+            - name: RequestRateLimiter #请求数限流，名字不能乱打
+              args:
+                redis-rate-limiter.replenishRate: 50  #令牌填充速率
+                redis-rate-limiter.brustCapacity: 100 #令牌捅容量
+                key-resolver: "#{@IPResolver}"   #SpEL表达式从Spring容器中获取Bean对象
+        - id: target-extraction
+          predicates: Path=/api/targetExtraction/**
+          uri: lb://target-extraction
+          filters:
+            - name: Hystrix
+              args:
+                name: defaultfallback
+                fallback: forward:/defaultfallback
+            - name: RequestRateLimiter #请求数限流，名字不能乱打
+              args:
+                redis-rate-limiter.replenishRate: 50  #令牌填充速率
+                redis-rate-limiter.brustCapacity: 100 #令牌捅容量
+                key-resolver: "#{@IPResolver}"   #SpEL表达式从Spring容器中获取Bean对象
+        - id: terrian-classfication
+          predicates: Path=/api/terrianClassfication/**
+          uri: lb://terrian-classfication
+          filters:
+            - name: Hystrix
+              args:
+                name: defaultfallback
+                fallback: forward:/defaultfallback
+            - name: RequestRateLimiter #请求数限流，名字不能乱打
+              args:
+                redis-rate-limiter.replenishRate: 50  #令牌填充速率
+                redis-rate-limiter.brustCapacity: 100 #令牌捅容量
+                key-resolver: "#{@IPResolver}"   #SpEL表达式从Spring容器中获取Bean对象
+
+        - id: user-service
+          predicates: Path=/api/userService/**
+          uri: lb://user-service
+          filters:
+            - name: Hystrix
+              args:
+                name: defaultfallback
+                fallback: forward:/defaultfallback
+            - name: RequestRateLimiter #请求数限流，名字不能乱打
+              args:
+                redis-rate-limiter.replenishRate: 50  #令牌填充速率
+                redis-rate-limiter.brustCapacity: 100 #令牌捅容量
+                key-resolver: "#{@IPResolver}"   #SpEL表达式从Spring容器中获取Bean对象
+    nacos:
+      discovery:
+        server-addr:
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+  shareSecurityContext: true
