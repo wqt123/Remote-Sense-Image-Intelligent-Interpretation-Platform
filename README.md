@@ -38,7 +38,27 @@ npm run dev
 
 ### 3. 后端
 
+#### 数据库配置
+
+数据库包括：
+
+- redis数据库用于gateway 网关
+- 阿里云OSS用于批量处理时文件的上传下载
+- MySQL用于存储用户和历史记录数据
+
+mysql数据库配置位于MySQL文件夹下。
+
+#### 静态模型下载
+
+由于静态模型过大，目前放在百度网盘：
+
+链接：https://pan.baidu.com/s/16IITwiVZtDX7qeYbwRIRtA 
+提取码：gh51
+
+下载后将对应微服务的静态模型static_models 放在对应微服务项目中的resources文件夹下即可。
+
+#### 运行后端代码
+
 后端通过maven进行项目管理，在下载好依赖后，将下图所示的5个微服务以及main.py
 flask接口文件全部运行起来即可。
 
-mysql数据库配置位于MySQL文件夹下。
