@@ -20,7 +20,7 @@ pip install -r PaddleRS/requirements.txt
 pip install -e PaddleRS/
 ```
 
-**paddleRS文件夹应与RS_backend在同一目录下。**
+**PaddleRS文件夹应与RS_backend在同一目录下。**
 
 ### 2. 前端
 
